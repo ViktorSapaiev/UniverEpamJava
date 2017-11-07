@@ -1,52 +1,64 @@
 package task1;
-import static task1.UtilArray.*;
+
 import java.util.Arrays;
+
+import static task1.ArrayUtil.*;
+
 /*
-    Задача: Упорядочить столбцы по убыванию среднего значения.
- */
+    Упорядочить строки, по возрастанию по самой длинной серии одинаковых элементов.
+*/
 
 public class Exercise4 {
+
     public static void main(String[] args) {
-        int[][] matrix  = new int[5][8];
-        addContent(matrix);
+        int[][] matrix = new int[5][10];
+        fillMatrix(matrix, 3);
+
         System.out.println('\n' + "Заданная матрица:");
-        showMatrix(matrix);
-        System.out.println('\n' + "Средние значения:" + '\n' + Arrays.toString(calcAverage(matrix)));
-        System.out.println('\n' + "Результат:");
+        printMatrix(matrix);
+        System.out.println('\n' + "Максимальная длинна последовательностей в строках:" + '\n' + Arrays.toString(countRepetitive(matrix)));
+
         sort(matrix);
-        showMatrix(matrix);
-        System.out.println('\n' + "Средние значения:" + '\n' + Arrays.toString(calcAverage(matrix)));
-
-
+        System.out.println('\n' + "Результат:");
+        printMatrix(matrix);
+        System.out.println('\n' + "Максимальная длинна последовательностей в строках:" + '\n' + Arrays.toString(countRepetitive(matrix)));
     }
 
-    private static float[] calcAverage(int[][] arr) {
-        float[] average = new float[arr[0].length];
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                average[j] += (float)arr[i][j];
-                if (i + 1 == arr.length) {
-                    average[j] /= arr.length;
-                }
-            }
-        }
-        return average;
-    }
 
-    public static void sort(int[][] arr) {
-        float[] average = calcAverage(arr);
-        float[] copyAverage = new float [average.length];
-        for (int i = 0; i < arr.length; i++) {
-            copyArray(average,copyAverage);
-            for (int j = 0; j < arr[i].length - 1; j++) {
-                for (int k = j+1; k < arr[i].length; k++) {
-                    if (copyAverage[j] < copyAverage[k]) {
-                        swap(arr[i], j, k);
-                        swap(copyAverage, j, k);
+    private static int[] countRepetitive(int[][] matrix) {
+        int[] repetitive = new int[matrix.length];
+        int line = 1;
+        int maxLine = 1;
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length - 1; j++) {
+                if (matrix[i][j] == matrix[i][j + 1]) {
+                    line++;
+                    if (line > maxLine) {
+                        maxLine = line;
                     }
+                } else {
+                    line = 1;
+                }
+            }
+            repetitive[i] = maxLine;
+            line = 1;
+            maxLine = 1;
+        }
+        return repetitive;
+    }
+
+    public static void sort(int[][] matrix) {
+        int[] repetitive = countRepetitive(matrix);
+        for (int i = 0; i < repetitive.length - 1; i++) {
+            for (int j = i + 1; j < repetitive.length; j++) {
+                if (repetitive[i] > repetitive[j]) {
+                    int[] temp = matrix[j];
+                    matrix[j] = matrix[i];
+                    matrix[i] = temp;
+                    swap(repetitive, i, j);
                 }
             }
         }
-
     }
 }

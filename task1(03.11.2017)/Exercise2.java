@@ -1,16 +1,18 @@
 package task1;
+
 import java.util.Arrays;
 
-import static task1.UtilArray.*;
+import static task1.ArrayUtil.*;
 
 /*
     В одномерном массиве сначала положительные потом отрицательные за О(n).
 */
 
 public class Exercise2 {
+
     public static void main(String[] args) {
         int[] arr = new int[25];
-        addContent(arr);
+        fillArray(arr);
         System.out.println('\n' + "Заданный массив:");
         System.out.println(Arrays.toString(arr));
         radixSort(arr);
@@ -30,7 +32,9 @@ public class Exercise2 {
 
         for (j = 0; j < 4; j++) {
             cnt[j] = new int[257];
-            for (i = 0; i < 257; i++) cnt[j][i] = 0;
+            for (i = 0; i < 257; i++){
+                cnt[j][i] = 0;
+            }
         }
 
         b = new int[a_len];
@@ -42,11 +46,15 @@ public class Exercise2 {
         }
 
         for (j = 0; j < 4; j++) {
-            for (i = 1; i < 256; i++) cnt[j][i] += cnt[j][i - 1];
+            for (i = 1; i < 256; i++) {
+                cnt[j][i] += cnt[j][i - 1];
+            }
             for (i = 0; i < a_len; i++) {
                 b[cnt[j][(arr[i] >>> (8 * j)) & 0xff]++] = arr[i];
             }
-            for (i = 0; i < a_len; i++) arr[i] = b[i];
+            for (i = 0; i < a_len; i++) {
+                arr[i] = b[i];
+            }
         }
     }
 }
