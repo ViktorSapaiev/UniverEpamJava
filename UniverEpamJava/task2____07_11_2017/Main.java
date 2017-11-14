@@ -1,5 +1,8 @@
 package UniverEpamJava.task2____07_11_2017;
 import UniverEpamJava.task2____07_11_2017.vehicle.*;
+import UniverEpamJava.task2____07_11_2017.vehicle.motion.*;
+
+
 import java.util.Calendar;
 import static UniverEpamJava.task2____07_11_2017.until.FactoryVehicle.factoryVechicle;
 /*
@@ -19,13 +22,53 @@ import static UniverEpamJava.task2____07_11_2017.until.FactoryVehicle.factoryVec
  */
 public class Main {
     public static void main(String[] args) {
-        CVehicle[] vehicles = new CVehicle[30];
+        CVehicle[] vehicles = new CVehicle[50];
         autoFill(vehicles);// Автонаполнение массива объектами
         //printArray(vehicles);// Напечатать все объекты массива
         //filter(vehicles); // механизмы с наименьшей ценой с наибольшей скоростью и не старше 5 лет
         //filterPlane(vehicles, 5000,2000); // найти из механизмов Plane c с высотой полета выше 5000 с годом выпуска после 2000
-        filterMaxSpeed(vehicles,200,500); //найти механизмы с максимальной скоростью в диапазоне 200 - 500, но не Plane
+        //filterMaxSpeed(vehicles,200,500); //найти механизмы с максимальной скоростью в диапазоне 200 - 500, но не Plane
+        SwimAble[] swimAbles = new SwimAble[20];
+        MoveAble[] moveAbles = new MoveAble[15];
+        FlyAble[] flyAbles = new FlyAble[10];
+        fillInterfaceArr(moveAbles);
+        printArray(moveAbles);
+    }
 
+    public static void fillInterfaceArr(SwimAble[] dest){
+        Object currentElem;
+        int i = 0;
+        while (i < dest.length) {
+            currentElem = factoryVechicle();
+            if (currentElem instanceof SwimAble) {
+                dest[i] = (SwimAble)currentElem;
+                i++;
+            }
+        }
+    }
+
+    public static void fillInterfaceArr(FlyAble[] dest){
+        Object currentElem ;
+        int i = 0;
+        while (i < dest.length) {
+            currentElem = factoryVechicle();
+            if (currentElem instanceof FlyAble) {
+                dest[i] = (FlyAble) currentElem;
+                i++;
+            }
+        }
+    }
+
+    public static void fillInterfaceArr(MoveAble[] dest){
+        Object currentElem;
+        int i = 0;
+        while (i < dest.length) {
+            currentElem = factoryVechicle();
+            if (currentElem instanceof MoveAble) {
+                dest[i] = (MoveAble) currentElem;
+                i++;
+            }
+        }
     }
 
     public static void autoFill(CVehicle[] vehicle){
@@ -34,9 +77,9 @@ public class Main {
         }
     }
 
-    public static void printArray(CVehicle[] vehicle) {
-        for (int i = 0; i < vehicle.length; i++) {
-            System.out.print(vehicle[i]);
+    public static void printArray(Object[] data) {
+        for (int i = 0; i < data.length; i++) {
+            System.out.print(data[i]);
             System.out.println("\n");
         }
     }

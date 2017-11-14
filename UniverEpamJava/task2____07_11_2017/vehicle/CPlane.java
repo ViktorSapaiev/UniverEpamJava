@@ -1,7 +1,8 @@
 package UniverEpamJava.task2____07_11_2017.vehicle;
 import UniverEpamJava.task2____07_11_2017.until.*;
+import UniverEpamJava.task2____07_11_2017.vehicle.motion.*;
 
-public class CPlane extends CVehicle implements FlyAble {
+public class CPlane extends CVehicle implements MoveAble, FlyAble {
     private int flightAltitude;
     private int numPassengers;
 
@@ -22,9 +23,19 @@ public class CPlane extends CVehicle implements FlyAble {
     }
 
     public void fly() {
-        double x = super.getCoordinate().getX();
-        double y = super.getCoordinate().getY();
-        super.setCoordinate(x++, y--);
+        int x = super.getCoordinate().getX();
+        int y = super.getCoordinate().getY();
+        int z = super.getCoordinate().getZ();
+        x++;
+        z++;
+        super.setCoordinate(x, y,z);
+
+    }
+    public void move() {
+        int x = super.getCoordinate().getX();
+        int y = super.getCoordinate().getY();
+        x++;
+        super.setCoordinate(x, y,0);
 
     }
 
@@ -42,7 +53,8 @@ public class CPlane extends CVehicle implements FlyAble {
                 + "Year Model: " + super.getYearModel() + '\n'
                 + "Coordinate: " + "\n\t"
                 + "X "+ super.getCoordinate().getX() + "\n\t"
-                + "Y " + super.getCoordinate().getY() + '\n'
+                + "Y " + super.getCoordinate().getY() + "\n\t"
+                + "Z " + super.getCoordinate().getZ() + '\n'
                 + "Flight Altitude: "+ this.getFlightAltitude()+ '\n'
                 + "Number of passenger: "+ this.getNumPassengers();
     }
