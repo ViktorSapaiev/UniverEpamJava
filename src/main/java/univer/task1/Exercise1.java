@@ -1,6 +1,6 @@
-package task1;
+package univer.task1;
 
-import static task1.ArrayUtil.*;
+import static univer.task1.ArrayUtil.*;
 
 import java.util.Arrays;
 

@@ -1,6 +1,6 @@
-package UniversetyEpamJava.task1____03_11_2017;
+package univer.task1;
 
-import static UniversetyEpamJava.task1____03_11_2017.ArrayUtil.*;
+import static univer.task1.ArrayUtil.*;
 
 /*
 Дана квадратная матрица A порядка M (M — нечетное число). Начи-
@@ -9,7 +9,7 @@ import static UniversetyEpamJava.task1____03_11_2017.ArrayUtil.*;
 обратном  порядке,  первый  столбец  в  обратном  порядке,  оставшиеся  эле-
 менты второй строки и т. д.; последним выводится центральный элемент
 матрицы.
- */
+*/
 
 /**
  * Класс содержит необходимые методы для вывода на экран значений из квадратной матрицы <b>A</b>
