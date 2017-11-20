@@ -1,8 +1,8 @@
-package univer.task1;
+package univerEpamJava.task1;
 
 import java.util.Arrays;
 
-import static univer.task1.ArrayUtil.*;
+import static univerEpamJava.task1.ArrayUtil.*;
 
 /*
     Упорядочить строки, по возрастанию по самой длинной серии одинаковых элементов.

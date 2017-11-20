@@ -1,6 +1,6 @@
-package univer.task1;
+package univerEpamJava.task1;
 
-import static univer.task1.ArrayUtil.*;
+import static univerEpamJava.task1.ArrayUtil.*;
 
 /*
 Дана квадратная матрица A порядка M (M — нечетное число). Начи-

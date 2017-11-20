@@ -1,4 +1,4 @@
-package univer.task1;
+package univerEpamJava.task1;
 
 public class ArrayUtil {
     public static void fillArray(int[] arr) {
