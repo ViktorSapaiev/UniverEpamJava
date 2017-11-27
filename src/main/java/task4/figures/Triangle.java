@@ -5,15 +5,15 @@ public class Triangle implements Figure {
     private Line sideAB, sideBC, sideAC;
 
     public Triangle(Point apexA, Point apexB, Point apexC) {
-        try {
+        /*try {*/
             checkPosition(apexA, apexB, apexC);
             this.apexA = apexA;
             this.apexB = apexB;
             this.apexC = apexC;
-        } catch (Exception e) {
+        /*} catch (Exception e) {
             System.err.println(" Error initialization. All apexes will be on one line");
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void show() {
@@ -86,12 +86,12 @@ public class Triangle implements Figure {
 
     }
 
-    public void checkPosition(Point apexA, Point apexB, Point apexC) throws Exception {
+    public void checkPosition(Point apexA, Point apexB, Point apexC)  {
         if (apexA.getX() == apexB.getX() && apexA.getX() == apexC.getX()) {
-            throw new Exception();
+            throw new IllegalArgumentException();
         }
         if (apexA.getY() == apexB.getY() && apexA.getY() == apexC.getY()) {
-            throw new Exception();
+            throw new IllegalArgumentException();
         }
     }
 

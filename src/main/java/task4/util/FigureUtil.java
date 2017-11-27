@@ -1,7 +1,7 @@
 package task4.util;
-import task4.abstractFactory.ColorFigure;
-import task4.abstractFactory.ColorlessFigure;
-import task4.abstractFactory.Creator;
+import task4.abstractfactory.ColorFigure;
+import task4.abstractfactory.ColorlessFigure;
+import task4.abstractfactory.Creator;
 import task4.figures.*;
 
 import static task4.util.RandomNumber.r;
