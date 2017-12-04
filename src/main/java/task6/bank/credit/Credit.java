@@ -1,42 +1,84 @@
-package task6.credit;
+package task6.bank.credit;
 
+import task6.bank.Bank;
 import task6.client.Client;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 public class Credit {
     private static int startID = 10000;
     private int creditID;
+    private String bankName;
+    private Bank bank;
     private Client client;
     private String clientFullName;
     private double value;
     private double firstPayment;
-    private Calendar startDate;
-    private Calendar finishDate;
+    private double clientPaid;
+    private double sumPercents;
+    private LocalDate startDate;
+    private LocalDate finishDate;
     private String currency = "Гривна";
     private float yearPercent;
-    private int numPayments; //количество платежей
+    private int numPayments;
+    private Status status;
     private Goals goal;
 
     public Credit() {
         this.creditID = startID++;
     }
 
-    public Credit(Client client, double value, double firstPayment, float yearPercent, int numPayments, Goals goal) {
-        this.creditID = startID++;
-        this.client = client;
-        this.value = value;
-        this.firstPayment = firstPayment;
-        this.yearPercent = yearPercent;
-        this.numPayments = numPayments;
-        this.goal = goal;
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+
+
+    public double getClientPaid() {
+        return clientPaid;
+    }
+
+    public void setClientPaid(double clientPaid) {
+        this.clientPaid = clientPaid;
+    }
+
+    public double getSumPercents() {
+        return sumPercents;
+    }
+
+    public void setSumPercents(double sumPercents) {
+        this.sumPercents = sumPercents;
+    }
+
+    public String getClientFullName() {
+        return clientFullName;
     }
 
     public void setClientFullName(String clientFullName) {
         this.clientFullName = clientFullName;
     }
+
     public int getCreditID() {
         return creditID;
     }
@@ -69,19 +111,19 @@ public class Credit {
         this.firstPayment = firstPayment;
     }
 
-    public Calendar getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Calendar getFinishDate() {
+    public LocalDate getFinishDate() {
         return finishDate;
     }
 
-    public void setFinishDate(Calendar finishDate) {
+    public void setFinishDate(LocalDate finishDate) {
         this.finishDate = finishDate;
     }
 
@@ -110,16 +152,20 @@ public class Credit {
     }
 
     public void printCreditInformation() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm.ss");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("d.MM.yyyy");
+        String earlyRepaymentAble = (bank.isEarlyRepayment()) ? "Есть" : "Нет";
         System.out.println(
                 "\tНомер договора: " + creditID + '\n' +
+                        "\tСостояние: " + status.getStatus() + '\n' +
+                        "\tНазвание банка: " + bankName + '\n' +
                         "\tФИО получателя: " + clientFullName + '\n' +
                         "\tСумма кредита (грн.): " + value + '\n' +
-                        "\tДата начала: " + dateFormat.format(startDate.getTime()) + '\n' +
-                        "\tДата окончания: " + dateFormat.format(finishDate.getTime()) + '\n' +
+                        "\tДата начала: " + format.format(startDate) + '\n' +
+                        "\tДата окончания: " + format.format(finishDate) + '\n' +
                         "\tСтавка: " + yearPercent + '\n' +
                         "\tПервый взнос (грн.): " + firstPayment + '\n' +
-                        "\tКоличество платежей: " + numPayments
+                        "\tКоличество платежей: " + numPayments + '\n' +
+                        "\tВозможность дострочного погашения: " + earlyRepaymentAble + '\n'
         );
     }
 
@@ -127,15 +173,19 @@ public class Credit {
     public String toString() {
         return "Credit{" +
                 "creditID=" + creditID +
+                ", bankName='" + bankName + '\'' +
                 ", clientFullName='" + clientFullName + '\'' +
                 ", value=" + value +
                 ", firstPayment=" + firstPayment +
+                ", clientPaid=" + clientPaid +
+                ", sumPercents=" + sumPercents +
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
                 ", currency='" + currency + '\'' +
                 ", yearPercent=" + yearPercent +
                 ", numPayments=" + numPayments +
-                ", goal='" + goal + '\'' +
+                ", status=" + status +
+                ", goal=" + goal.getGoal() +
                 '}';
     }
 }

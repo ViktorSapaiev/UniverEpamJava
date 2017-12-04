@@ -1,34 +1,44 @@
 package task6.bank;
 
-import task6.credit.Credit;
+import task6.bank.bankPerform.creditPercent.CreditPercent;
+import task6.bank.credit.Credit;
+import task6.bank.credit.Status;
 
-import java.util.Calendar;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static task6.Main.showMenu;
+
 public class Bank {
+    private int bankID;
     private String name;
     private double balance;
-    private float firstPayment;
-    private Map<String, Credit> credits = new HashMap<>();
+    private Map<Integer, List<Credit>> credits = new HashMap<>();
     private float minYearPercent;
-    private boolean earlyRepayment;
-    private boolean increaseCreditLine;
+    private CreditPercent creditPercent;
+    private boolean earlyRepayment = false;
+    private boolean increaseCreditLine = false;
 
-    public Bank(String name, double balance, float firstPayment, float minYearPercent, boolean earlyRepayment, boolean increaseCreditLine) {
+    public Bank(int bankID, String name, double balance, float minYearPercent, CreditPercent creditPercent) {
+        this.bankID = bankID;
         this.name = name;
         this.balance = balance;
         this.minYearPercent = minYearPercent;
-        this.earlyRepayment = earlyRepayment;
-        this.increaseCreditLine = increaseCreditLine;
+        this.creditPercent = creditPercent;
     }
 
     public Map getCredits() {
         return credits;
     }
 
-    public void setCredits(String fullName, Credit credit) {
-        this.credits.put(fullName, credit);
+    public void setCredits(Integer id, List<Credit> credit) {
+        this.credits.put(id, credit);
     }
 
     public String getName() {
@@ -72,6 +82,10 @@ public class Bank {
         this.increaseCreditLine = increaseCreditLine;
     }
 
+    public void setCreditPercent(CreditPercent creditPercent) {
+        this.creditPercent = creditPercent;
+    }
+
     public String printCreditInformation() {
         String earlyRepaymentAble = (earlyRepayment) ? "Есть" : "Нет";
         String increaseCreditLineAble = (increaseCreditLine) ? "Есть" : "Нет";
@@ -83,34 +97,54 @@ public class Bank {
 
     public void createCreditOffer(Credit credit) {
         String earlyRepaymentAble = (earlyRepayment) ? "Есть" : "Нет";
-        String increaseCreditLineAble = (increaseCreditLine) ? "Есть" : "Нет";
-        credit.setStartDate(Calendar.getInstance());
-        Calendar finishDate = Calendar.getInstance();
-        finishDate.add(Calendar.MONTH, credit.getNumPayments());
-        credit.setFinishDate(finishDate);
-        credit.setClientFullName(credit.getClient().getFullName());
-        calcYearPercent(credit);
-        System.out.println("Банк \"" + name + "\" готов одобрить ваш кредит на следующих условиях:");
+        fillCreditInform(credit);
+        System.out.println("\nБанк \"" + name + "\" готов одобрить ваш кредит на следующих условиях:");
+        System.out.println("\n######### Кредитное предложение #########");
         credit.printCreditInformation();
-        System.out.print("\tВозможность дострочного погашения: " + earlyRepaymentAble + '\n'
-                + "\tВозможность увеличения кредитной линии: " + increaseCreditLineAble);
-    }
-
-    public void calcYearPercent(Credit credit) {
-        float fistPaymentPercent = (float) (credit.getFirstPayment() / credit.getValue()) * 100;
-        int numPayment = credit.getNumPayments();
-
-        if (fistPaymentPercent < 10.0f && numPayment > 24) {
-            credit.setYearPercent(minYearPercent + credit.getGoal().getPercent() + 10);
-        } else if (fistPaymentPercent > 20.0f && numPayment < 24) {
-            credit.setYearPercent(minYearPercent + credit.getGoal().getPercent() + 2);
-        } else if (fistPaymentPercent > 20.0f && numPayment > 24) {
-            credit.setYearPercent(minYearPercent + credit.getGoal().getPercent() + 4);
-        } else {
-            credit.setYearPercent(minYearPercent + credit.getGoal().getPercent() + 6);
+        System.out.println("#####################################\n");
+        try {
+            creditConfirm(credit);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
+    private void fillCreditInform(Credit credit) {
+        credit.setBankName(name);
+        credit.setBank(this);
+        credit.setClientFullName(credit.getClient().getFullName());
+        credit.setStartDate(LocalDate.now());
+        credit.setFinishDate(credit.getStartDate().plusMonths(credit.getNumPayments()));
+        credit.setClientPaid(credit.getFirstPayment());
+        calcYearPercent(credit);
+        credit.setSumPercents(((credit.getValue() - credit.getClientPaid()) * (credit.getYearPercent() / 12)) / 100);
+        credit.setStatus(Status.OFFER);
+    }
+
+    private void creditConfirm(Credit credit) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Подтвердить кредит?(y/n)");
+        String userAnswer = reader.readLine().toUpperCase();
+        if ("Y".equals(userAnswer)) {
+            int clientID = credit.getClient().getId();
+            if (credits.get(clientID) == null) {
+                credits.put(clientID, new ArrayList<>());
+                credits.get(clientID).add(credit);
+            } else {
+                credits.get(clientID).add(credit);
+            }
+            credit.getClient().setCredits(bankID, credit);
+            credit.setStatus(Status.ACTIVE);
+            System.out.println("Кредит получен!");
+            showMenu();
+        } else {
+            showMenu();
+        }
+    }
+
+    public void calcYearPercent(Credit credit) {
+        creditPercent.calcYearPercent(credit, minYearPercent);
+    }
 
     @Override
     public String toString() {

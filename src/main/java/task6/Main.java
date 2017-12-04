@@ -1,118 +1,76 @@
 package task6;
 
+import org.xml.sax.SAXException;
 import task6.bank.Bank;
 import task6.client.Client;
-import task6.credit.Credit;
-import task6.credit.Goals;
+import task6.client.clientParser.ClientParser;
+import task6.factory.BankFactory;
 
-import javax.swing.text.Document;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.util.List;
 
-import static task6.factory.BankFactory.*;
-
-import java.io.*;
-import java.util.Calendar;
-
+import static task6.bank.credit.CreditRequest.proposeCreateCredit;
+import static task6.util.BankSort.sort;
 
 public class Main {
-    private static Client client;
 
-    public static void main(String[] args) {
-        addBankName("ПроКредитБанк");
-        Bank[] banks = bankFactory();
+    private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private static Bank[] banks = BankFactory.bankFactory();
+    private static int userID = 1;
+    private static List<Client> clients;
+
+    public static void main(String[] args) throws IOException, SAXException, ParserConfigurationException, ParseException {
+        ClientParser clientParser = new ClientParser("E:\\EpamJava\\src\\resources\\task6\\clients.xml");
+        clients = clientParser.parseClient();
+        sayHello();
+        showMenu();
         sort(banks);
-        printPropose(banks);
-        try {
-            requestCredit(banks);
-        } catch (IOException e) {
-            e.printStackTrace();
+    }
+
+    public static void sayHello() {
+        System.out.println("\nДобро пожаловать " + clients.get(userID).getFullName());
+    }
+
+    public static void showMenu() throws IOException {
+        System.out.println("\n######### Главное меню #########");
+        System.out.println("1. Показать кредитные предложения");
+        System.out.println("2. Просмотреть профиль");
+        System.out.println("3. Сменить пользователя");
+        System.out.println("4. Выйти");
+        System.out.print("Выберите действие: ");
+        int userAnswer = Integer.parseInt(reader.readLine());
+        if (userAnswer == 1) {
+            printPropose(banks);
+            proposeCreateCredit(clients.get(userID), banks);
+        } else if (userAnswer == 2) {
+            System.out.println(clients.get(userID).getProfile() + "\n");
+            showMenu();
+        } else if (userAnswer == 3) {
+            System.out.println("######### Список Пользователей #########");
+            for (int i = 0; i < clients.size(); i++) {
+                Client client = clients.get(i);
+                System.out.println((i + 1) + ". " + client.getFullName() + client.getProfile() + "\n");
+            }
+            System.out.print("Выберите пользователя (" + 1 + "-" + clients.size() + "): ");
+            userAnswer = Integer.parseInt(reader.readLine());
+            userID = userAnswer - 1;
+            sayHello();
+            showMenu();
+        } else if (userAnswer == 4) {
+            return;
         }
-
     }
-
-    public static void requestCredit(Bank[] banks) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Желаете запросить кредит? (Y\\N): ");
-        String confirmCredit = reader.readLine().toUpperCase();
-
-        if ("Y".equals(confirmCredit)) {
-            System.out.print("Введите номер банка в котором желаете запросить кредит: ");
-            int bankID = Integer.parseInt(reader.readLine());
-            Credit creditRequest = createCreditRequest();
-            banks[bankID].createCreditOffer(creditRequest);
-        } else {
-            System.out.println("Спасибо, что воспользовались нашей программой!");
-        }
-    }
-
-    private static Credit createCreditRequest() throws IOException {
-        Credit creditRequest = new Credit();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        //creditRequest.setClient(createClient());
-        System.out.println("\nЦель получения кредита: ");
-        for (Goals dir : Goals.values()) {
-            System.out.println("#" + dir.getId() + " " + dir.getGoal());
-        }
-        System.out.println("Выберите номер соответствующий вашей цели получения кредита: ");
-        int goalID = Integer.parseInt(reader.readLine());
-        creditRequest.setGoal(Goals.getById(goalID));
-
-        System.out.print("Введите необходимую сумму (грн.): ");
-        creditRequest.setValue(Double.parseDouble(reader.readLine()));
-
-        System.out.print("Введите сумму первого взноса (грн.): ");
-        creditRequest.setFirstPayment(Double.parseDouble(reader.readLine()));
-
-        System.out.print("Срок возврата (количество месяцев): ");
-        creditRequest.setNumPayments(Integer.parseInt(reader.readLine()));
-        return creditRequest;
-    }
-
-   private static Client createClient() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Введите ваше ФИО: ");
-        String name = reader.readLine();
-        System.out.print("Введите вашу заработную плату: ");
-        double salary = Double.parseDouble(reader.readLine());
-        return new Client(name, salary);
-    }
-
 
     private static void printPropose(Bank[] banks) {
+        System.out.println("\n######### Информация о кредитах #########");
+        sort(banks);
         for (int i = 0; i < banks.length; i++) {
-            System.out.println("#" + i + " " + banks[i].printCreditInformation() + "\n");
+            System.out.println(i + 1 + ". " + banks[i].printCreditInformation() + "\n");
         }
     }
 
-    private static void sort(Bank[] banks) {
-        for (int i = 0; i < banks.length - 1; i++) {
-            for (int j = i + 1; j < banks.length; j++) {
-                float fPercent = banks[i].getMinYearPercent();
-                float sPercent = banks[j].getMinYearPercent();
-                boolean fErlRepayment = banks[i].isEarlyRepayment();
-                boolean sErlRepayment = banks[j].isEarlyRepayment();
-                boolean fIncCreditLn = banks[i].isIncreaseCreditLine();
-                boolean sIncCreditLn = banks[j].isIncreaseCreditLine();
-                if (fPercent > sPercent) {
-                    swap(banks, i, j);
-                } else if (fPercent == sPercent) {
-                    if ((!fErlRepayment && !fIncCreditLn) && (sErlRepayment && sIncCreditLn)) {
-                        swap(banks, i, j);
-                    } else if (!fErlRepayment && sErlRepayment) {
-                        swap(banks, i, j);
-                    } else if (!fIncCreditLn && sIncCreditLn) {
-                        swap(banks, i, j);
-                    }
-                }
-            }
-        }
-    }
-
-    public static void swap(Object[] arr, int elem1, int elem2) {
-        Object swap = arr[elem1];
-        arr[elem1] = arr[elem2];
-        arr[elem2] = swap;
-    }
 }

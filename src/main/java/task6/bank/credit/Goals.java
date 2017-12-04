@@ -1,4 +1,4 @@
-package task6.credit;
+package task6.bank.credit;
 
 public enum Goals {
     BUYHOUSE(1, "На покупку жилья.", 9.0f),
@@ -7,15 +7,23 @@ public enum Goals {
     BUYGADGETS(4, "На покупку гаджетов (мобильные телфоны, ноутбуки, персональные компьютеры).", 3.0f),
     STUDYCREDIT(5, "На оплату обучения.", 4.0f);
 
+    private String goal;
+    private int id;
+    private float percent;
     Goals(int id, String goal, float percent) {
         this.goal = goal;
         this.id = id;
         this.percent = percent;
     }
 
-    private String goal;
-    private int id;
-    private float percent;
+    public static Goals getById(int id) {
+        for (Goals result : Goals.values()) {
+            if (id == result.getId()) {
+                return result;
+            }
+        }
+        throw new IllegalArgumentException("Goal with id " + id + " is not found");
+    }
 
     public String getGoal() {
         return goal;
@@ -23,15 +31,6 @@ public enum Goals {
 
     public int getId() {
         return id;
-    }
-
-    public static Goals getById(int id) {
-        for (Goals result : Goals.values()) {
-            if(id == result.getId()) {
-                return result;
-            }
-        }
-        throw new IllegalArgumentException("Goal with id " + id + " is not found");
     }
 
     public float getPercent() {

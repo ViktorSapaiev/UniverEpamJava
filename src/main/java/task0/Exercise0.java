@@ -1,5 +1,7 @@
 package task0;
 import task0.*;
+
+
 /*
 Используя циклы и метод:
 System.out.print("* "), System.out.print("  "),
@@ -29,6 +31,7 @@ public class Exercise0 {
         System.out.println();
         Rhombus rhombus = new Rhombus(5);
         rhombus.draw();
+
     }
 
 }
