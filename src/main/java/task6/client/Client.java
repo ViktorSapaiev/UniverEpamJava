@@ -115,7 +115,23 @@ public class Client {
                 "Место работы: " + job + '\n' +
                 "Должность: " + position + '\n' +
                 "Заработная плата (грн.): " + salary + '\n' +
-                "Кредитная история: " + credits;
+                "Кредитная история: " + "Введите \"1\" что бы просмотреть";
+    }
+
+    public void showCredits() {
+        int i = 1;
+        System.out.println("\n######### Ваша кредитная история #########\n");
+        if(credits.size() == 0) {
+            System.out.println("Ваша кредитная история чиста");
+        }
+        for(Map.Entry<Integer, List<Credit>> entry : credits.entrySet()) {
+            List<Credit> value = entry.getValue();
+            for (Credit elem : value) {
+                System.out.println("Кредит: " + i);
+                elem.getCreditFullInfo();
+                i++;
+            }
+        }
     }
 
     @Override

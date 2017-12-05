@@ -4,7 +4,7 @@ import task6.bank.credit.Credit;
 
 public class YearPercentPrivatBank implements CreditPercent {
     public void calcYearPercent(Credit credit, float minYearPercent) {
-        float fistPaymentPercent = (float) (credit.getFirstPayment() / credit.getValue()) * 100;
+        float fistPaymentPercent = (float) (credit.getFirstPaymentValue() / credit.getValue()) * 100;
         int numPayment = credit.getNumPayments();
 
         if (fistPaymentPercent < 10.0f && numPayment > 24) {

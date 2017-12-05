@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -21,13 +22,11 @@ import java.util.List;
 public class ClientParser {
     private static DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private static DocumentBuilder builder;
-    private File file;
     private Document document;
 
-    public ClientParser(String filePath) throws ParserConfigurationException, IOException, SAXException {
+    public ClientParser(InputStream is) throws ParserConfigurationException, IOException, SAXException {
         ClientParser.builder = ClientParser.factory.newDocumentBuilder();
-        this.file = new File(filePath);
-        this.document = builder.parse(file);
+        this.document = builder.parse(is);
     }
 
     public List<Client> parseClient() throws IOException, ParserConfigurationException, SAXException, ParseException {

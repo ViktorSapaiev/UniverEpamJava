@@ -15,7 +15,7 @@ public class Credit {
     private Client client;
     private String clientFullName;
     private double value;
-    private double firstPayment;
+    private double firstPaymentValue;
     private double clientPaid;
     private double sumPercents;
     private LocalDate startDate;
@@ -53,7 +53,6 @@ public class Credit {
     public void setBank(Bank bank) {
         this.bank = bank;
     }
-
 
     public double getClientPaid() {
         return clientPaid;
@@ -103,12 +102,12 @@ public class Credit {
         this.value = value;
     }
 
-    public double getFirstPayment() {
-        return firstPayment;
+    public double getFirstPaymentValue() {
+        return firstPaymentValue;
     }
 
-    public void setFirstPayment(double firstPayment) {
-        this.firstPayment = firstPayment;
+    public void setFirstPaymentValue(double firstPaymentValue) {
+        this.firstPaymentValue = firstPaymentValue;
     }
 
     public LocalDate getStartDate() {
@@ -151,22 +150,32 @@ public class Credit {
         this.goal = goal;
     }
 
-    public void printCreditInformation() {
+    public void getCreditShortInfo() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("d.MM.yyyy");
         String earlyRepaymentAble = (bank.isEarlyRepayment()) ? "Есть" : "Нет";
         System.out.println(
-                "\tНомер договора: " + creditID + '\n' +
-                        "\tСостояние: " + status.getStatus() + '\n' +
-                        "\tНазвание банка: " + bankName + '\n' +
-                        "\tФИО получателя: " + clientFullName + '\n' +
-                        "\tСумма кредита (грн.): " + value + '\n' +
-                        "\tДата начала: " + format.format(startDate) + '\n' +
-                        "\tДата окончания: " + format.format(finishDate) + '\n' +
-                        "\tСтавка: " + yearPercent + '\n' +
-                        "\tПервый взнос (грн.): " + firstPayment + '\n' +
-                        "\tКоличество платежей: " + numPayments + '\n' +
-                        "\tВозможность дострочного погашения: " + earlyRepaymentAble + '\n'
+                "\n\tНомер договора: " + creditID + '\n' +
+                "\tСостояние: " + status.getStatus() + '\n' +
+                "\tНаименование банка: " + bankName + '\n' +
+                "\tФИО получателя: " + clientFullName + '\n' +
+                "\tСумма кредита (грн.): " + value + '\n' +
+                "\tДата начала: " + format.format(startDate) + '\n' +
+                "\tДата окончания: " + format.format(finishDate) + '\n' +
+                "\tСтавка: " + yearPercent + '\n' +
+                "\tПервый взнос (грн.): " + firstPaymentValue + '\n' +
+                "\tКоличество платежей: " + numPayments + '\n' +
+                "\tВозможность дострочного погашения: " + earlyRepaymentAble
         );
+    }
+
+    public void getCreditFullInfo() {
+        getCreditShortInfo();
+        System.out.println(
+                "\tЗаплачено: " + clientPaid + '\n' +
+                "\tЗадолжность с процентов: " + sumPercents + '\n'
+        );
+
+
     }
 
     @Override
@@ -176,7 +185,7 @@ public class Credit {
                 ", bankName='" + bankName + '\'' +
                 ", clientFullName='" + clientFullName + '\'' +
                 ", value=" + value +
-                ", firstPayment=" + firstPayment +
+                ", firstPaymentValue=" + firstPaymentValue +
                 ", clientPaid=" + clientPaid +
                 ", sumPercents=" + sumPercents +
                 ", startDate=" + startDate +

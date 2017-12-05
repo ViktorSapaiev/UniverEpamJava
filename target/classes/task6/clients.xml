@@ -1,0 +1,30 @@
+<?xml version = '1.0' encoding="UTF-8"?>
+<users>
+	<user id="100523">
+		<fullName>Иванов Иван Иванович</fullName>
+		<birthday>02.11.1992</birthday>
+		<address>г.Киев ул. Елены Телеги д. 22 кв. 15, Украина</address>
+		<balance>35000.0</balance>
+		<job>EPAM</job>
+		<position>Java-junior developer</position>
+		<salary>17000</salary>
+	</user>
+	<user id="100637">
+		<fullName>Петров Петр Петрович</fullName>
+		<birthday>12.09.1994</birthday>
+		<address>г.Киев пр.Победы д. 20 кв. 70, Украина</address>
+		<balance>70000.0</balance>
+		<job>Luxoft</job>
+		<position>Java-middle developer</position>
+		<salary>40000</salary>
+	</user>
+	<user id="100222">
+		<fullName>Алексеев Алексей Алексеевич</fullName>
+		<birthday>17.03.1995</birthday>
+		<address>г.Киев ул. Максима Берлинского д. 22 кв. 15, Украина</address>
+		<balance>170000.0</balance>
+		<job>GlobalLogic</job>
+		<position>Java-senior developer</position>
+		<salary>60000</salary>
+	</user>
+</users>

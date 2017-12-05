@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static task6.Main.showMenu;
+import static task6.Menu.showMenu;
 
 public class Bank {
     private int bankID;
@@ -100,8 +100,8 @@ public class Bank {
         fillCreditInform(credit);
         System.out.println("\nБанк \"" + name + "\" готов одобрить ваш кредит на следующих условиях:");
         System.out.println("\n######### Кредитное предложение #########");
-        credit.printCreditInformation();
-        System.out.println("#####################################\n");
+        credit.getCreditShortInfo();
+        System.out.println("\n#########################################\n");
         try {
             creditConfirm(credit);
         } catch (IOException e) {
@@ -110,12 +110,10 @@ public class Bank {
     }
 
     private void fillCreditInform(Credit credit) {
-        credit.setBankName(name);
-        credit.setBank(this);
         credit.setClientFullName(credit.getClient().getFullName());
         credit.setStartDate(LocalDate.now());
         credit.setFinishDate(credit.getStartDate().plusMonths(credit.getNumPayments()));
-        credit.setClientPaid(credit.getFirstPayment());
+        credit.setClientPaid(credit.getFirstPaymentValue());
         calcYearPercent(credit);
         credit.setSumPercents(((credit.getValue() - credit.getClientPaid()) * (credit.getYearPercent() / 12)) / 100);
         credit.setStatus(Status.OFFER);
@@ -137,8 +135,10 @@ public class Bank {
             credit.setStatus(Status.ACTIVE);
             System.out.println("Кредит получен!");
             showMenu();
-        } else {
+        } else if ("N".equals(userAnswer)){
             showMenu();
+        } else {
+            creditConfirm(credit);
         }
     }
 
