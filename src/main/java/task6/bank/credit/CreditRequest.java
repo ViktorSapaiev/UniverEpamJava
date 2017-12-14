@@ -3,139 +3,88 @@ package task6.bank.credit;
 import task6.bank.Bank;
 import task6.client.Client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import static task6.Menu.showMenu;
-
 public class CreditRequest {
-    private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private static int bankID;
-    private static int goalID;
+    private Bank bank;
+    private Client client;
+    private String clientFullName;
+    private double value;
+    private double firstPaymentValue;
+    private int numPayments;
+    private Status status;
+    private Goals goal;
 
-
-    public static void proposeCreateCredit(Client client, Bank[] banks) throws IOException {
-        System.out.print("Получить кредит? (y/n): ");
-        String userAnswer = reader.readLine().toUpperCase();
-        if ("Y".equals(userAnswer)) {
-            createCreditRequest(client, banks);
-        } else if ("N".equals(userAnswer)){
-            showMenu();
-        } else {
-            proposeCreateCredit(client,banks);
-        }
+    public CreditRequest(Bank bank, Client client, String clientFullName, double value, double firstPaymentValue, int numPayments, Status status, Goals goal) {
+        this.bank = bank;
+        this.client = client;
+        this.clientFullName = clientFullName;
+        this.value = value;
+        this.firstPaymentValue = firstPaymentValue;
+        this.numPayments = numPayments;
+        this.status = status;
+        this.goal = goal;
     }
 
-    private static void createCreditRequest(Client client, Bank[] banks) throws IOException {
-        Credit creditRequest = new Credit();
-        creditRequest.setClient(client);
-
-        setBank(banks, creditRequest);
-        creditRequest.setBankName(banks[bankID].getName());
-        showGoals();
-
-        setGoal(creditRequest);
-
-        Double creditValue = getCreditValue();
-        creditRequest.setValue(creditValue);
-
-        Double fistPayment = getFirstPaymentValue();
-        creditRequest.setFirstPaymentValue(fistPayment);
-
-        int numPayments = getNumPayments();
-        creditRequest.setNumPayments(numPayments);
-
-        banks[bankID].createCreditOffer(creditRequest);
+    public Bank getBank() {
+        return bank;
     }
 
-
-
-    private static void setBank(Bank[] banks, Credit creditRequest) throws IOException {
-        setBankID(banks);
-        try {
-            creditRequest.setBank(banks[bankID]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println(
-                    "Банк с индетификатором " + bankID + " еще не создан. " +
-                    "Введите пожалуйста число от 1 до " + banks.length
-            );
-            setBank(banks,creditRequest);
-         }
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
-    private static void setBankID(Bank[] banks) throws IOException {
-        try {
-            System.out.print("Введите номер банка в котором желаете запросить кредит(1" + "-" + banks.length + "): ");
-            bankID = Integer.parseInt(reader.readLine());
-        } catch (NumberFormatException e) {
-            System.err.println("Ошибка ввода. Введите пожалуйста число от 1 до " + banks.length);
-            setBankID(banks);
-        }
+    public Client getClient() {
+        return client;
     }
 
-    private static void showGoals() {
-        System.out.println("\n######### Цель получения кредита #########");
-
-        for (Goals dir : Goals.values()) {
-            System.out.println("#" + dir.getId() + " " + dir.getGoal());
-        }
+    public void setClient(Client client) {
+        this.client = client;
     }
 
-    private static void setGoal(Credit creditRequest) throws IOException {
-        setGoalID();
-        try {
-            creditRequest.setGoal(Goals.getById(goalID));
-        } catch (IllegalArgumentException e) {
-            System.err.println(
-                    "Цель с индетификатором " + goalID + " еще не создана. " +
-                    "Введите пожалуйста число от 1 до " + Goals.values().length
-            );
-            setGoal(creditRequest);
-        }
+    public String getClientFullName() {
+        return clientFullName;
     }
 
-    private static void setGoalID() throws IOException {
-        try {
-            System.out.print("Выберите номер соответствующий вашей цели получения кредита(1" + "-" + Goals.values().length + "): ");
-            goalID = Integer.parseInt(reader.readLine());
-        } catch (NumberFormatException e) {
-            System.err.println("Ошибка ввода. Введите пожалуйста число от 1 до " + Goals.values().length);
-            setGoalID();
-        }
+    public void setClientFullName(String clientFullName) {
+        this.clientFullName = clientFullName;
     }
 
-    private static Double getCreditValue() throws IOException {
-        try {
-            System.out.print("Введите необходимую сумму (грн.): ");
-            return Double.parseDouble(reader.readLine());
-        } catch (NumberFormatException e) {
-            System.err.println("Принимаемый аргумент должен быть числом");
-            getCreditValue();
-        }
-        return 0.0;
+    public double getValue() {
+        return value;
     }
 
-    private static Double getFirstPaymentValue() throws IOException {
-        try {
-            System.out.print("Введите сумму первого взноса (грн.): ");
-            return Double.parseDouble(reader.readLine());
-        } catch (NumberFormatException e) {
-            System.err.println("Принимаемый аргумент должен быть числом");
-            getFirstPaymentValue();
-        }
-        return 0.0;
+    public void setValue(double value) {
+        this.value = value;
     }
 
-    private static int getNumPayments() throws IOException {
-        try {
-            System.out.print("Срок возврата (количество месяцев): ");
-            return Integer.parseInt(reader.readLine());
-        } catch (NumberFormatException e) {
-            System.err.println("Принимаемый аргумент должен быть числом");
-            getNumPayments();
-        }
-        return 0;
+    public double getFirstPaymentValue() {
+        return firstPaymentValue;
     }
 
+    public void setFirstPaymentValue(double firstPaymentValue) {
+        this.firstPaymentValue = firstPaymentValue;
+    }
+
+    public int getNumPayments() {
+        return numPayments;
+    }
+
+    public void setNumPayments(int numPayments) {
+        this.numPayments = numPayments;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Goals getGoal() {
+        return goal;
+    }
+
+    public void setGoal(Goals goal) {
+        this.goal = goal;
+    }
 }

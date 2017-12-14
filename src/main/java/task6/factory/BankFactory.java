@@ -1,14 +1,18 @@
 package task6.factory;
 
+import task6.bank.AllAbleBank;
 import task6.bank.Bank;
 import task6.bank.ERBank;
-import task6.bank.FullBank;
 import task6.bank.ICLBank;
 import task6.bank.bankPerform.creditPercent.CreditPercent;
 import task6.bank.bankPerform.creditPercent.YearPercentOther;
 import task6.bank.bankPerform.creditPercent.YearPercentOtp;
 import task6.bank.bankPerform.creditPercent.YearPercentPrivatBank;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,33 +26,28 @@ public class BankFactory {
     private static final int MAX_PERCENT = 16;
     private static final int MIN_ID = 300;
     private static final int MAX_ID = 900;
-    private static List<String> bankNames = new ArrayList<>(Arrays.asList(
-            "Приватбанк", "Otp", "Ощадбанк", "УкрСиббанк", "Пумб", "Unicredits",
-            "Райффайзен Банк Аваль", "НашБанк", "ТвойБанк", "КлиентБанк",
-            "ЛюбимыйБанк", "Сбербанк", "НоунеймБанк", "ЧейТоБанк", "МайскийБанк",
-            "ДушевныйБанк", "МамаМылаБанк", "БанкНеБанк", "КредитБанк", "ГосБанк",
-            "НародныйБанк", "БанкСпираль", "ДенегНетБанк", "БанкОчередь"));
+    private static List<String> bankNames;
 
-    public static Bank[] bankFactory() {
-        Bank[] banks = new Bank[r(6, 23)];
-        int id = 100;
+    public Bank[] bankFactory() throws IOException {
+        bankNames = new ArrayList<>(Arrays.asList(txtParser()));
+        Bank[] banks = new Bank[r(6, bankNames.size())];
         for (int i = 0; i < banks.length; i++) {
-            if (i == 0) {
-                bankCreator(banks, i, 0, new YearPercentPrivatBank());
+            if ("ПриватБанк".equals(bankNames.get(i))) {
+                banks[i] = bankCreator(r(0, 4), i, new YearPercentPrivatBank());
             }
-            if (i == 1) {
-                bankCreator(banks, i, 1, new YearPercentOtp());
+            if ("ОТП Банк".equals(bankNames.get(i))) {
+                banks[i] = bankCreator(r(0, 4), i, new YearPercentOtp());
             } else {
-                bankCreator(banks, i, i, new YearPercentOther());
+                banks[i] = bankCreator(r(0, 4), i, new YearPercentOther());
             }
         }
         return banks;
     }
 
-    private static void bankCreator(Bank[] banks, int i, int name, CreditPercent type) {
-        switch (r(0, 4)) {
+    public Bank bankCreator(int key, int name, CreditPercent type) {
+        switch (key) {
             case 0: {
-                banks[i] = new Bank(
+                return new Bank(
                         r(MIN_ID, MAX_ID),
                         bankNames.get(name),
                         r(MIN_BANKBALANCE, MAX_BANKBALANCE),
@@ -56,9 +55,8 @@ public class BankFactory {
                         type
                 );
             }
-            break;
             case 1: {
-                banks[i] = new ERBank(
+                return new ERBank(
                         r(MIN_ID, MAX_ID),
                         bankNames.get(name),
                         r(MIN_BANKBALANCE, MAX_BANKBALANCE),
@@ -66,9 +64,8 @@ public class BankFactory {
                         type
                 );
             }
-            break;
             case 2: {
-                banks[i] = new ICLBank(
+                return new ICLBank(
                         r(MIN_ID, MAX_ID),
                         bankNames.get(name),
                         r(MIN_BANKBALANCE, MAX_BANKBALANCE),
@@ -76,9 +73,8 @@ public class BankFactory {
                         type
                 );
             }
-            break;
             case 3: {
-                banks[i] = new FullBank(
+                return new AllAbleBank(
                         r(MIN_ID, MAX_ID),
                         bankNames.get(name),
                         r(MIN_BANKBALANCE, MAX_BANKBALANCE),
@@ -86,8 +82,20 @@ public class BankFactory {
                         type
                 );
             }
-            break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
+    private String[] txtParser() throws IOException {
+        InputStream is = BankFactory.class.getResourceAsStream("bankNames.txt");
+        System.out.println();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String currentStr;
+        String names = "";
+        while ((currentStr = reader.readLine()) != null) {
+            names += currentStr + ",";
+        }
+        return names.split(",");
+    }
 }

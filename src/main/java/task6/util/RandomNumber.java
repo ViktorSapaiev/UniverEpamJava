@@ -13,6 +13,6 @@ public abstract class RandomNumber {
     }
 
     public static double r(double min, double max) {
-        return (int) (Math.random() * (max - min)) + min;
+        return  (Math.random() * (max - min)) + min;
     }
 }

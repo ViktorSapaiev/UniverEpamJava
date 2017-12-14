@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static task6.Main.*;
+import static task6.OperationCenter.*;
 
-public class Menu {
+public abstract class Menu {
     private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public static void showMenu() throws IOException {

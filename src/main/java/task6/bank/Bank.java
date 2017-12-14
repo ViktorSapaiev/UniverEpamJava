@@ -97,10 +97,10 @@ public class Bank {
 
     public void createCreditOffer(Credit credit) {
         String earlyRepaymentAble = (earlyRepayment) ? "Есть" : "Нет";
-        fillCreditInform(credit);
+        //fillCreditInform(credit);
         System.out.println("\nБанк \"" + name + "\" готов одобрить ваш кредит на следующих условиях:");
         System.out.println("\n######### Кредитное предложение #########");
-        credit.getCreditShortInfo();
+        //credit.getCreditShortInfo();
         System.out.println("\n#########################################\n");
         try {
             creditConfirm(credit);
